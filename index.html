@@ -110,7 +110,7 @@
         </h2>
         
         <p class="text-slate-600 text-base md:text-lg mb-10 leading-relaxed max-w-2xl">
-            Ahlan wa sahlan. Wadah ini hadir sebagai ruang kolaborasi digital untuk memudahkan kita dalam menyelaraskan langkah, memantau progres, dan menunaikan setiap amanah. Mari bersinergi bersama, jadikan setiap tugas yang tertata sebagai wujud nyata pengabdian dan jalan kebaikan bagi kemajuan pesantren kita.
+            Ahlan wa sahlan. Wadah ini hadir sebagai ruang kolaborasi digital untuk memudahkan kita dalam menyelaraskan langkah, memantau progres, dan menunaikan setiap tugas. Mari bersinergi bersama, jadikan setiap tugas yang tertata sebagai wujud nyata pengabdian dan jalan kebaikan bagi kemajuan pesantren kita.
         </p>
 
         <!-- Tombol Aksi Royal Blue -->
@@ -243,7 +243,7 @@
                         
                         <div class="w-full md:w-56 bg-ice p-3 rounded-xl border border-blue-50">
                             <div class="flex justify-between text-xs font-semibold mb-2">
-                                <span class="text-slate-600">Pencapaian Amanah</span>
+                                <span class="text-slate-600">Pencapaian Tugas</span>
                                 <span id="activeMemberProgressText" class="text-royal font-bold">0%</span>
                             </div>
                             <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
@@ -252,47 +252,45 @@
                         </div>
                     </div>
 
-                    <!-- Form Tambah Tugas -->
-                    <form id="addTaskForm" class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-8 bg-royal p-5 rounded-2xl shadow-md border border-royal-hover relative overflow-hidden">
-                        <!-- Dekorasi background halus -->
-                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-white rounded-full blur-3xl opacity-10"></div>
-
-                        <!-- Input Deskripsi Tugas -->
-                        <div class="relative md:col-span-4 lg:col-span-2 z-10">
-                            <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                <i class="ph ph-check-square text-blue-200"></i>
+                    <!-- Form Tambah Tugas (Design Susunan Baru dengan Background Biru dan Form Putih) -->
+                    <form id="addTaskForm" class="flex flex-col gap-4 mb-8 bg-royal p-6 rounded-2xl shadow-md relative">
+                        <h3 class="text-white font-bold tracking-wide text-sm mb-1 uppercase">TAMBAH TUGAS</h3>
+                        
+                        <!-- Input Deskripsi Tugas (Baris 1) -->
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                                <i class="ph ph-check-square text-slate-400 text-lg"></i>
                             </div>
-                            <input type="text" id="taskDescInput" placeholder="Deskripsi amanah baru..." required
-                                class="w-full pl-10 pr-10 py-3 rounded-xl border-none bg-royal-hover text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition-all placeholder:text-blue-200 text-sm shadow-inner">
+                            <input type="text" id="taskDescInput" placeholder="Deskripsi tugas baru..." required
+                                class="w-full pl-12 pr-4 py-3.5 rounded-xl border border-transparent bg-white text-navy focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all placeholder:text-slate-400 text-sm shadow-sm">
+                        </div>
+                        
+                        <!-- Baris Bawah: Deadline, Prioritas, Tombol (Baris 2) -->
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <!-- Input Tanggal -->
+                            <div class="relative flex-1">
+                                 <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                                    <i class="ph ph-calendar-blank text-slate-400 text-lg"></i>
+                                </div>
+                                <input type="date" id="taskDeadlineInput" required
+                                    class="w-full pl-12 pr-4 py-3.5 rounded-xl border border-transparent bg-white text-navy focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all text-sm cursor-pointer shadow-sm style-calendar">
+                            </div>
                             
-                            <div class="absolute inset-y-0 right-1 flex items-center">
-                                <button type="button" id="aiEnhanceTaskBtn" class="text-blue-200 hover:text-white hover:bg-royal p-1.5 rounded-lg transition-all group" title="Perjelas Instruksi dengan AI">
-                                    <i class="ph-fill ph-sparkle text-lg group-hover:scale-110 transition-transform"></i>
-                                </button>
+                            <!-- Prioritas (Klasifikasi) -->
+                            <div class="relative flex-1">
+                                <select id="taskPriorityInput" class="w-full px-4 py-3.5 rounded-xl border border-transparent bg-white text-navy focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all text-sm font-medium cursor-pointer appearance-none shadow-sm" title="Prioritas">
+                                     <option value="normal">Normal</option>
+                                     <option value="mendesak">Urgen</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                                    <i class="ph ph-caret-down text-slate-400"></i>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <!-- Input Deadline -->
-                        <div class="relative md:col-span-2 lg:col-span-1 z-10">
-                             <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                <i class="ph ph-calendar-blank text-blue-200"></i>
-                            </div>
-                            <input type="date" id="taskDeadlineInput" required
-                                class="w-full pl-10 pr-4 py-3 rounded-xl border-none bg-royal-hover text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition-all text-sm cursor-pointer style-calendar shadow-inner">
-                        </div>
-                        
-                        <!-- Area Tombol -->
-                        <div class="flex gap-2 md:col-span-2 lg:col-span-1 z-10">
-                            <!-- Prioritas -->
-                            <select id="taskPriorityInput" class="w-1/3 px-2 py-3 rounded-xl border-none bg-royal-hover text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition-all text-xs font-semibold cursor-pointer appearance-none text-center shadow-inner" title="Prioritas">
-                                 <option value="normal">Nrm</option>
-                                 <option value="mendesak">Urg</option>
-                            </select>
                             
                             <!-- Tombol Submit -->
                             <button type="submit" 
-                                class="w-2/3 bg-white hover:bg-ice text-royal font-bold px-4 py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 text-sm">
-                                <i class="ph ph-plus"></i> Amanah
+                                class="flex-1 bg-white hover:bg-ice text-royal font-bold py-3.5 px-4 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2 text-sm border border-transparent">
+                                <i class="ph ph-plus"></i> Tugas
                             </button>
                         </div>
                     </form>
@@ -300,7 +298,7 @@
                     <!-- Daftar Tugas -->
                     <div class="flex flex-col h-full">
                         <div class="flex justify-between items-center mb-4 px-1">
-                            <h3 class="text-sm font-bold text-navy uppercase tracking-wide">Daftar Amanah</h3>
+                            <h3 class="text-sm font-bold text-navy uppercase tracking-wide">Daftar Tugas</h3>
                             <span id="taskStats" class="text-xs font-bold bg-ice text-navy px-3 py-1.5 rounded-full border border-blue-50">0 / 0 Selesai</span>
                         </div>
                         <div id="tasksList" class="space-y-4 overflow-y-auto pr-2 max-h-[450px]">
@@ -315,7 +313,7 @@
                         <i class="ph ph-hand-pointing text-4xl text-royal opacity-50"></i>
                     </div>
                     <h3 class="text-xl font-bold text-navy mb-2">Pilih Anggota Tim</h3>
-                    <p class="text-slate-500 max-w-sm text-sm">Tambahkan anggota baru di panel kiri atau pilih anggota yang sudah ada untuk mulai mengelola amanah kerja mereka.</p>
+                    <p class="text-slate-500 max-w-sm text-sm">Tambahkan anggota baru di panel kiri atau pilih anggota yang sudah ada untuk mulai mengelola tugas kerja mereka.</p>
                 </div>
 
             </section>
@@ -329,23 +327,12 @@
                 <i class="ph-fill ph-warning-circle text-orange-600 text-2xl"></i>
                 Hapus Anggota?
             </h3>
-            <p class="text-slate-600 text-sm mb-8 leading-relaxed">Yakin ingin menghapus <span id="confirmMemberName" class="font-bold text-navy"></span>? Semua data amanah dan catatannya akan ikut terhapus secara permanen.</p>
+            <p class="text-slate-600 text-sm mb-8 leading-relaxed">Yakin ingin menghapus <span id="confirmMemberName" class="font-bold text-navy"></span>? Semua data tugas dan catatannya akan ikut terhapus secara permanen.</p>
             <div class="flex justify-end gap-3">
                 <button id="cancelDeleteBtn" class="px-5 py-2.5 rounded-xl text-slate-600 bg-ice hover:bg-slate-200 transition-colors text-sm font-semibold">Batal</button>
                 <button id="confirmDeleteBtn" class="px-5 py-2.5 rounded-xl text-white bg-orange-600 hover:bg-orange-700 transition-colors text-sm font-semibold flex items-center gap-2">
                     <i class="ph ph-trash"></i> Hapus Permanen
                 </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Alert API Kosong -->
-    <div id="apiAlertModal" class="fixed top-4 right-4 z-50 hidden fade-in slide-up">
-        <div class="bg-white border-l-4 border-orange-500 p-4 rounded-xl shadow-lg border-y border-r border-slate-100 max-w-sm flex items-start gap-3">
-            <i class="ph-fill ph-warning-circle text-orange-500 text-xl mt-0.5"></i>
-            <div>
-                <h4 class="text-navy font-bold text-sm">API Key Gemini Kosong</h4>
-                <p class="text-slate-500 text-xs mt-1">Fungsi AI asisten memerlukan API Key yang valid untuk beroperasi.</p>
             </div>
         </div>
     </div>
@@ -382,7 +369,7 @@
 
     <style>
         .style-calendar::-webkit-calendar-picker-indicator {
-            filter: invert(1); opacity: 0.6; cursor: pointer;
+            filter: invert(0); opacity: 0.6; cursor: pointer;
         }
         .style-calendar::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     </style>
@@ -409,51 +396,6 @@
         const globalAppId = 'aplikasi-ceklis-tim-v1';
         let userId = null;
         let membersCollection = null;
-
-        const callGeminiAPI = async (prompt) => {
-            const apiKey = ""; 
-            
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }]
-            };
-
-            let retries = 5;
-            let delay = 1000;
-            while (retries > 0) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (!response.ok) {
-                        if(response.status === 400 && !apiKey) {
-                             throw new Error("MISSING_API_KEY");
-                        }
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, AI tidak dapat memberikan respons saat ini.";
-                } catch (error) {
-                    if (error.message === "MISSING_API_KEY") {
-                        showApiAlert();
-                        return "API_ERROR_BLANK";
-                    }
-                    retries--;
-                    if (retries === 0) return "API_ERROR_NETWORK";
-                    await new Promise(res => setTimeout(res, delay));
-                    delay *= 2;
-                }
-            }
-        };
-
-        const showApiAlert = () => {
-            const alert = document.getElementById('apiAlertModal');
-            alert.classList.remove('hidden');
-            setTimeout(() => { alert.classList.add('hidden'); }, 5000);
-        }
 
         document.addEventListener('DOMContentLoaded', () => {
             let members = [];
@@ -497,7 +439,7 @@
                         id: generateId(),
                         message: actionMessage,
                         timestamp: Date.now(),
-                        userEmail: currentUserEmail // Menambahkan email user yang aktif mengubah data
+                        userEmail: currentUserEmail
                     };
                     const updatedLogs = [newLog, ...(member.logs || [])].slice(0, 50);
                     try {
@@ -574,10 +516,8 @@
                 btnLogin.disabled = true;
                 btnLogin.innerHTML = `<i class="ph ph-spinner animate-spin"></i> Memproses...`;
 
-                // Panggil Firebase Auth untuk memverifikasi kredensial
                 signInWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
-                        // LOGIN BERHASIL
                         const user = userCredential.user;
                         console.log("Sesi aktif untuk UID:", user.uid);
                         
@@ -587,12 +527,8 @@
                         loginForm.reset();
                     })
                     .catch((error) => {
-                        // LOGIN GAGAL (Email salah, password salah, atau network error)
                         console.error("Gagal masuk:", error.code, error.message);
-                        
-                        // Berikan pesan yang aman tanpa membocorkan detail mana yang salah
                         alert("Gagal masuk. Silakan periksa kembali email dan password Anda.");
-                        
                         btnLogin.disabled = false;
                         btnLogin.innerHTML = `<i class="ph ph-sign-in"></i> Masuk`;
                     });
@@ -632,7 +568,6 @@
             const taskDescInput = document.getElementById('taskDescInput');
             const taskDeadlineInput = document.getElementById('taskDeadlineInput');
             const tasksListContainer = document.getElementById('tasksList');
-            const aiEnhanceTaskBtn = document.getElementById('aiEnhanceTaskBtn');
 
             const confirmModal = document.getElementById('confirmModal');
             const confirmMemberName = document.getElementById('confirmMemberName');
@@ -708,39 +643,6 @@
                         setTimeout(() => hideConfirmModal(), 1500);
                     }
                 }
-            });
-
-            aiEnhanceTaskBtn.addEventListener('click', async () => {
-                const desc = taskDescInput.value.trim();
-                const originalPlaceholder = taskDescInput.placeholder;
-                
-                if (!desc) {
-                    taskDescInput.placeholder = "Ketik sedikit tugas dulu...";
-                    taskDescInput.classList.add('ring-2', 'ring-royal', 'border-transparent');
-                    setTimeout(() => {
-                        taskDescInput.placeholder = originalPlaceholder;
-                        taskDescInput.classList.remove('ring-2', 'ring-royal', 'border-transparent');
-                    }, 2000);
-                    return;
-                }
-
-                aiEnhanceTaskBtn.innerHTML = `<i class="ph-fill ph-spinner animate-spin text-white text-lg"></i>`;
-                aiEnhanceTaskBtn.disabled = true;
-
-                const prompt = `Saya sedang mendata tugas untuk anggota tim. Tugas singkat yang saya ketik adalah: "${desc}". Tolong kembangkan menjadi 1 kalimat instruksi tugas yang profesional, sangat jelas, dan spesifik dalam bahasa Indonesia. Jangan gunakan tanda kutip, jangan pakai poin-poin, dan jangan bertele-tele.`;
-                
-                const result = await callGeminiAPI(prompt);
-                
-                aiEnhanceTaskBtn.innerHTML = `<i class="ph-fill ph-sparkle text-lg"></i>`;
-                aiEnhanceTaskBtn.disabled = false;
-
-                if (result === "API_ERROR_BLANK" || result === "API_ERROR_NETWORK") {
-                    return; 
-                }
-                
-                taskDescInput.value = result.replace(/^["']|["']$/g, '').trim();
-                taskDescInput.classList.add('bg-royal');
-                setTimeout(() => taskDescInput.classList.remove('bg-royal'), 1000);
             });
 
             const renderMembersList = () => {
@@ -860,7 +762,7 @@
                     tasksListContainer.innerHTML = `
                         <div class="text-center p-8 text-sm text-slate-400 border border-slate-100 rounded-2xl bg-ice">
                             <i class="ph ph-coffee text-3xl mb-2 block"></i>
-                            Belum ada amanah diberikan.<br>Tambahkan tugas baru di atas.
+                            Belum ada tugas diberikan.<br>Tambahkan tugas baru di atas.
                         </div>
                     `;
                     return;
@@ -964,8 +866,8 @@
                                                 <div class="mt-3 space-y-3 border-l-2 border-slate-200 pl-4 ml-1">
                                                     ${c.replies.map(r => `
                                                         <div class="flex gap-2.5 group/reply">
-                                                            <div class="w-7 h-7 rounded-full ${r.authorName === 'AI Assistant' ? 'bg-royal' : 'bg-slate-200 text-slate-700'} text-white flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
-                                                                ${r.authorName === 'AI Assistant' ? '<i class="ph-fill ph-sparkle"></i>' : (r.authorName ? r.authorName.charAt(0).toUpperCase() : 'U')}
+                                                            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-700 text-white flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
+                                                                ${r.authorName ? r.authorName.charAt(0).toUpperCase() : 'U'}
                                                             </div>
                                                             <div class="flex-1 min-w-0">
                                                                 <div class="bg-white border border-slate-200 p-2.5 rounded-xl rounded-tl-none shadow-sm relative">
@@ -995,9 +897,6 @@
                                 </div>
                                 <textarea class="comment-input w-full pl-4 pr-24 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-royal focus:border-transparent focus:outline-none resize-none bg-white shadow-sm transition-all" rows="1" placeholder="Tulis catatan atau @nama..."></textarea>
                                 <div class="absolute right-2 bottom-2 flex gap-1.5">
-                                    <button class="ai-ask-btn text-slate-500 hover:bg-ice hover:text-royal p-2 rounded-lg transition-colors border border-transparent" title="Tanya AI tentang tugas ini">
-                                        <i class="ph-fill ph-sparkle text-lg"></i>
-                                    </button>
                                     <button class="send-comment-btn bg-royal hover:bg-royal-hover text-white p-2 rounded-lg transition-colors shadow-sm" title="Kirim Komentar">
                                         <i class="ph-fill ph-paper-plane-tilt text-lg"></i>
                                     </button>
@@ -1056,7 +955,6 @@
                     const commentsFormContainer = taskEl.querySelector('.comments-form-container');
                     const commentInput = taskEl.querySelector('.comment-input');
                     const sendCommentBtn = taskEl.querySelector('.send-comment-btn');
-                    const aiAskBtn = taskEl.querySelector('.ai-ask-btn');
                     const replyIndicator = taskEl.querySelector('.reply-indicator');
                     const replyTargetName = taskEl.querySelector('.reply-target-name');
                     const cancelReplyBtn = taskEl.querySelector('.cancel-reply-btn');
@@ -1128,39 +1026,6 @@
                         btn.addEventListener('click', () => {
                             deleteComment(btn.dataset.taskId, btn.dataset.commentId);
                         });
-                    });
-
-                    aiAskBtn.addEventListener('click', async () => {
-                        const question = commentInput.value.trim();
-                        if (!question) {
-                            commentInput.placeholder = "Ketik masalah atau pertanyaan dulu...";
-                            commentInput.classList.add('ring-2', 'ring-royal');
-                            setTimeout(() => {
-                                commentInput.placeholder = "Tulis catatan atau @nama...";
-                                commentInput.classList.remove('ring-2', 'ring-royal');
-                            }, 2000);
-                            return;
-                        }
-
-                        aiAskBtn.innerHTML = `<i class="ph ph-spinner animate-spin text-lg text-royal"></i>`;
-                        aiAskBtn.disabled = true;
-
-                        await addComment(task.id, question, activeReplyId);
-                        
-                        const prompt = `Saya memiliki tugas: "${task.desc}". Pengguna bertanya: "${question}". Sebagai asisten tim, berikan jawaban atau solusi praktis yang singkat dan jelas. Gunakan bahasa Indonesia, nada yang suportif dan profesional.`;
-                        const solution = await callGeminiAPI(prompt);
-                        
-                        if (solution !== "API_ERROR_BLANK" && solution !== "API_ERROR_NETWORK") {
-                            await addAiComment(task.id, solution, activeReplyId);
-                        }
-                        
-                        commentInput.value = '';
-                        commentInput.style.height = 'auto';
-                        activeReplyId = null;
-                        replyIndicator.classList.add('hidden');
-                        
-                        aiAskBtn.innerHTML = `<i class="ph-fill ph-sparkle text-lg"></i>`;
-                        aiAskBtn.disabled = false;
                     });
 
                     const addSubtaskBtn = taskEl.querySelector('.add-subtask-btn');
@@ -1385,7 +1250,7 @@
                         console.error("Error adding task:", error);
                     } finally {
                         submitBtn.disabled = false;
-                        submitBtn.innerHTML = `<i class="ph ph-plus"></i> Amanah`;
+                        submitBtn.innerHTML = `<i class="ph ph-plus"></i> Tugas`;
                     }
                 }
             });
@@ -1460,42 +1325,8 @@
                     
                     try {
                         await updateDoc(doc(membersCollection, activeMemberId), { tasks: updatedTasks });
-                        await addLog(activeMemberId, `Menambahkan catatan pada amanah`);
+                        await addLog(activeMemberId, `Menambahkan catatan pada tugas`);
                     } catch (error) { console.error("Error adding comment:", error); }
-                }
-            };
-
-            const addAiComment = async (taskId, text, replyToCommentId = null) => {
-                if (!membersCollection) return;
-                const activeMember = members.find(m => m.id === activeMemberId);
-                
-                if (activeMember) {
-                    const updatedTasks = (activeMember.tasks || []).map(t => {
-                        if (t.id === taskId) {
-                            const aiComment = {
-                                id: generateId(),
-                                authorName: 'AI Assistant', 
-                                text: text,
-                                timestamp: Date.now(),
-                                replies: []
-                            };
-                            
-                            const comments = [...(t.comments || [])];
-                            
-                            if (replyToCommentId) {
-                                const parent = comments.find(c => c.id === replyToCommentId);
-                                if (parent) parent.replies = [...(parent.replies || []), aiComment];
-                            } else {
-                                comments.push(aiComment);
-                            }
-                            return { ...t, comments };
-                        }
-                        return t;
-                    });
-                    
-                    try {
-                        await updateDoc(doc(membersCollection, activeMemberId), { tasks: updatedTasks });
-                    } catch (error) { console.error("Error adding AI comment:", error); }
                 }
             };
 
