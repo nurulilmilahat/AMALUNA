@@ -125,8 +125,8 @@
         <!-- Header Dashboard -->
         <header class="w-full max-w-5xl mb-8 slide-up flex flex-col md:flex-row items-center justify-between gap-4 relative bg-white p-5 rounded-2xl shadow-sm border border-slate-200/70">
             <div class="flex items-center gap-4 w-full md:w-auto">
-                <button id="backToHomeBtn" class="text-slate-400 hover:text-royal transition-colors p-2 rounded-xl hover:bg-blue-50 focus:outline-none" title="Kembali">
-                    <i class="ph ph-arrow-left text-2xl"></i>
+                <button id="signOutBtn" class="text-slate-400 hover:text-orange-600 transition-colors p-2 rounded-xl hover:bg-orange-50 focus:outline-none" title="Keluar">
+                    <i class="ph ph-power text-2xl"></i>
                 </button>
                 <div class="flex items-center gap-3">
                     <svg class="w-8 h-8 text-royal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -409,6 +409,29 @@
         let userId = null;
         let membersCollection = null;
 
+        const escapeHtml = (str) => {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+
+        const showToast = (msg) => {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-4 right-4 bg-orange-600 text-white px-5 py-3 rounded-xl shadow-xl z-[100] fade-in flex items-center gap-2 text-sm font-semibold';
+            toast.innerHTML = `<i class="ph-fill ph-warning-circle text-lg"></i> ${escapeHtml(msg)}`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             let members = [];
             let activeMemberId = null;
@@ -430,10 +453,13 @@
             };
 
             const formatMentions = (text, membersList) => {
-                if (!text) return '';
-                let formattedText = text;
+                // 1. Amankan teks dari kode berbahaya terlebih dahulu
+                let formattedText = escapeHtml(text); 
+                
+                // 2. Baru lakukan replace untuk fitur @mention
                 membersList.forEach(m => {
                     const regex = new RegExp(`@${m.name}\\b`, 'gi');
+                    // Gunakan replace dengan literal string agar aman
                     formattedText = formattedText.replace(regex, `<span class="bg-ice text-royal border border-blue-100 px-1 py-0.5 rounded text-[10px] font-bold cursor-pointer hover:bg-blue-100">@${m.name}</span>`);
                 });
                 formattedText = formattedText.replace(/(^|\s)@(\w+)/g, (match, space, p1) => {
@@ -456,14 +482,17 @@
                     const updatedLogs = [newLog, ...(member.logs || [])].slice(0, 50);
                     try {
                         await updateDoc(doc(membersCollection, memberId), { logs: updatedLogs });
-                    } catch (e) { console.error("Error menambahkan log:", e); }
+                    } catch (e) { 
+                        console.error("Error menambahkan log:", e); 
+                        showToast("Gagal menyimpan log aktivitas. Periksa koneksi Anda.");
+                    }
                 }
             };
 
             const landingPage = document.getElementById('landingPage');
             const enterAppBtn = document.getElementById('enterAppBtn');
             const appContent = document.getElementById('appContent');
-            const backToHomeBtn = document.getElementById('backToHomeBtn');
+            const signOutBtn = document.getElementById('signOutBtn');
             
             // Modal Login Elements
             const loginModal = document.getElementById('loginModal');
@@ -592,8 +621,8 @@
                     });
             });
 
-            if (backToHomeBtn) {
-                backToHomeBtn.addEventListener('click', () => {
+            if (signOutBtn) {
+                signOutBtn.addEventListener('click', () => {
                     signOut(auth).then(() => {
                         appContent.classList.add('hidden');
                         appContent.classList.remove('flex');
@@ -697,6 +726,7 @@
                         confirmDeleteBtn.innerHTML = originalBtnText;
                     } catch (error) {
                         console.error("Gagal menghapus anggota:", error);
+                        showToast("Gagal menghapus anggota. Periksa koneksi Anda.");
                         confirmDeleteBtn.innerHTML = 'Gagal!';
                         setTimeout(() => hideConfirmModal(), 1500);
                     }
@@ -733,7 +763,7 @@
                                 ${member.name.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                                <h3 class="font-bold text-sm ${isActive ? 'text-white' : 'text-navy'}">${member.name}</h3>
+                                <h3 class="font-bold text-sm ${isActive ? 'text-white' : 'text-navy'}">${escapeHtml(member.name)}</h3>
                                 <p class="text-xs ${isActive ? 'text-blue-100' : 'text-slate-500'}">${(member.tasks || []).length} tugas</p>
                             </div>
                         </div>
@@ -757,6 +787,7 @@
                                         await updateDoc(doc(membersCollection, member.id), { name: newName.trim() });
                                     } catch (error) { 
                                         console.error("Gagal mengedit nama:", error); 
+                                        showToast("Gagal mengubah nama anggota. Periksa koneksi Anda.");
                                     }
                                 }
                             }
@@ -869,7 +900,7 @@
                                     }
                                 </div>
                                 <div class="flex items-start gap-2 group/tasktext mb-1">
-                                    <p class="task-text text-sm font-semibold ${taskStatus === 'telah' ? 'text-slate-400 line-through' : 'text-navy'} break-words flex-1">${task.desc}</p>
+                                    <p class="task-text text-sm font-semibold ${taskStatus === 'telah' ? 'text-slate-400 line-through' : 'text-navy'} break-words flex-1">${escapeHtml(task.desc)}</p>
                                     <button class="edit-task-btn opacity-0 group-hover/tasktext:opacity-100 text-slate-400 hover:text-royal transition-opacity p-0.5 rounded" data-task-id="${task.id}" title="Edit Tugas">
                                         <i class="ph ph-pencil-simple text-base"></i>
                                     </button>
@@ -1266,6 +1297,7 @@
                         memberNameInput.focus();
                     } catch (error) {
                         console.error("Error adding member: ", error);
+                        showToast("Gagal menambahkan anggota tim. Periksa koneksi Anda.");
                     } finally {
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = `<i class="ph ph-plus-circle text-lg"></i> Tambah`;
@@ -1309,6 +1341,7 @@
                         taskDescInput.focus();
                     } catch (error) {
                         console.error("Error adding task:", error);
+                        showToast("Gagal menambahkan tugas baru. Periksa koneksi Anda.");
                     } finally {
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = `<i class="ph ph-plus"></i> Tugas`;
@@ -1352,6 +1385,7 @@
                         await addLog(activeMemberId, `Mengubah status tugas "${taskToUpdate.desc}" menjadi ${statusText}`);
                     } catch (error) {
                         console.error("Error updating task:", error);
+                        showToast("Gagal memperbarui status tugas. Periksa koneksi Anda.");
                     }
                 }
             };
@@ -1387,7 +1421,10 @@
                     try {
                         await updateDoc(doc(membersCollection, activeMemberId), { tasks: updatedTasks });
                         await addLog(activeMemberId, `Menambahkan catatan pada tugas`);
-                    } catch (error) { console.error("Error adding comment:", error); }
+                    } catch (error) { 
+                        console.error("Error adding comment:", error); 
+                        showToast("Gagal mengirim komentar. Periksa koneksi Anda.");
+                    }
                 }
             };
 
@@ -1412,7 +1449,10 @@
                     
                     try {
                         await updateDoc(doc(membersCollection, activeMemberId), { tasks: updatedTasks });
-                    } catch (error) { console.error("Error deleting comment:", error); }
+                    } catch (error) { 
+                        console.error("Error deleting comment:", error); 
+                        showToast("Gagal menghapus komentar. Periksa koneksi Anda.");
+                    }
                 }
             };
 
@@ -1441,6 +1481,7 @@
                         await updateDoc(doc(membersCollection, activeMemberId), { tasks: updatedTasks });
                     } catch (error) {
                         console.error("Error adding subtask:", error);
+                        showToast("Gagal menambahkan langkah tugas. Periksa koneksi Anda.");
                     }
                 }
             };
@@ -1477,6 +1518,7 @@
                          await updateDoc(doc(membersCollection, activeMemberId), { tasks: updatedTasks });
                      } catch (error) {
                          console.error("Error toggling subtask:", error);
+                         showToast("Gagal memperbarui status langkah. Periksa koneksi Anda.");
                      }
                  }
             };
@@ -1508,6 +1550,7 @@
                          await updateDoc(doc(membersCollection, activeMemberId), { tasks: updatedTasks });
                      } catch (error) {
                          console.error("Error deleting subtask:", error);
+                         showToast("Gagal menghapus langkah tugas. Periksa koneksi Anda.");
                      }
                  }
             };
@@ -1527,6 +1570,7 @@
                         if(taskToDelete) await addLog(activeMemberId, `Menghapus tugas: "${taskToDelete.desc}"`);
                     } catch (error) {
                         console.error("Error deleting task:", error);
+                        showToast("Gagal menghapus tugas. Periksa koneksi Anda.");
                     }
                 }
             };
@@ -1543,7 +1587,10 @@
                     try {
                         await updateDoc(doc(membersCollection, activeMemberId), { tasks: updatedTasks });
                         await addLog(activeMemberId, `Mengedit tugas dari "${oldDesc}" menjadi "${newDesc.trim()}"`);
-                    } catch (error) { console.error("Error editing task:", error); }
+                    } catch (error) { 
+                        console.error("Error editing task:", error); 
+                        showToast("Gagal mengedit deskripsi tugas. Periksa koneksi Anda.");
+                    }
                 }
             };
 
@@ -1562,7 +1609,10 @@
                     });
                     try {
                         await updateDoc(doc(membersCollection, activeMemberId), { tasks: updatedTasks });
-                    } catch (error) { console.error("Error editing subtask:", error); }
+                    } catch (error) { 
+                        console.error("Error editing subtask:", error); 
+                        showToast("Gagal mengedit langkah tugas. Periksa koneksi Anda.");
+                    }
                 }
             };
 
