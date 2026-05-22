@@ -320,6 +320,18 @@
         </main>
     </div>
 
+    <!-- Modal Custom Prompt (Pengganti Prompt Bawaan Browser) -->
+    <div id="customPromptModal" class="fixed inset-0 bg-navy/70 backdrop-blur-sm z-50 hidden flex items-center justify-center fade-in opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl p-6 md:p-8 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300 border border-slate-100">
+            <h3 id="customPromptTitle" class="text-lg font-bold text-navy mb-4">Edit Data</h3>
+            <input type="text" id="customPromptInput" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-ice focus:bg-white focus:outline-none focus:ring-2 focus:ring-royal transition-all text-sm mb-6 shadow-sm" placeholder="Ketik di sini...">
+            <div class="flex justify-end gap-3">
+                <button id="customPromptCancelBtn" class="px-5 py-2.5 rounded-xl text-slate-600 bg-ice hover:bg-slate-200 transition-colors text-sm font-semibold">Batal</button>
+                <button id="customPromptConfirmBtn" class="px-5 py-2.5 rounded-xl text-white bg-royal hover:bg-royal-hover transition-colors text-sm font-semibold shadow-sm">Oke</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Konfirmasi Hapus -->
     <div id="confirmModal" class="fixed inset-0 bg-navy/70 backdrop-blur-sm z-50 hidden flex items-center justify-center fade-in opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300 border border-slate-100">
@@ -462,6 +474,52 @@
             const btnLogin = document.getElementById('btnLogin');
             const togglePasswordBtn = document.getElementById('togglePasswordBtn');
             const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+
+            // Custom Prompt Elements
+            const customPromptModal = document.getElementById('customPromptModal');
+            const customPromptTitle = document.getElementById('customPromptTitle');
+            const customPromptInput = document.getElementById('customPromptInput');
+            const customPromptCancelBtn = document.getElementById('customPromptCancelBtn');
+            const customPromptConfirmBtn = document.getElementById('customPromptConfirmBtn');
+            let promptCallback = null;
+
+            const showCustomPrompt = (title, defaultValue, callback) => {
+                customPromptTitle.textContent = title;
+                customPromptInput.value = defaultValue;
+                promptCallback = callback;
+
+                customPromptModal.classList.remove('hidden');
+                setTimeout(() => {
+                    customPromptModal.classList.remove('opacity-0');
+                    customPromptModal.firstElementChild.classList.remove('scale-95');
+                    customPromptInput.focus();
+                }, 10);
+            };
+
+            const hideCustomPrompt = () => {
+                customPromptModal.classList.add('opacity-0');
+                customPromptModal.firstElementChild.classList.add('scale-95');
+                setTimeout(() => {
+                    customPromptModal.classList.add('hidden');
+                    promptCallback = null;
+                }, 300);
+            };
+
+            customPromptCancelBtn.addEventListener('click', hideCustomPrompt);
+            
+            customPromptConfirmBtn.addEventListener('click', () => {
+                if (promptCallback) {
+                    promptCallback(customPromptInput.value);
+                }
+                hideCustomPrompt();
+            });
+
+            customPromptInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    customPromptConfirmBtn.click();
+                }
+            });
 
             const showLoginModal = () => {
                 loginModal.classList.remove('hidden');
@@ -692,16 +750,17 @@
                     editBtn.innerHTML = `<i class="ph ph-pencil-simple"></i>`;
                     editBtn.onclick = async (e) => {
                         e.stopPropagation();
-                        const newName = prompt("Edit nama anggota:", member.name);
-                        if (newName !== null && newName.trim() !== "") {
-                            if (membersCollection) {
-                                try {
-                                    await updateDoc(doc(membersCollection, member.id), { name: newName.trim() });
-                                } catch (error) { 
-                                    console.error("Gagal mengedit nama:", error); 
+                        showCustomPrompt("Edit nama anggota:", member.name, async (newName) => {
+                            if (newName !== null && newName.trim() !== "") {
+                                if (membersCollection) {
+                                    try {
+                                        await updateDoc(doc(membersCollection, member.id), { name: newName.trim() });
+                                    } catch (error) { 
+                                        console.error("Gagal mengedit nama:", error); 
+                                    }
                                 }
                             }
-                        }
+                        });
                     };
                     
                     const deleteBtn = document.createElement('button');
@@ -944,10 +1003,11 @@
                     const editTaskBtn = taskEl.querySelector('.edit-task-btn');
                     if (editTaskBtn) {
                         editTaskBtn.addEventListener('click', () => {
-                            const newDesc = prompt("Edit deskripsi tugas:", task.desc);
-                            if (newDesc !== null && newDesc.trim() !== "") {
-                                editTaskDesc(task.id, newDesc);
-                            }
+                            showCustomPrompt("Edit deskripsi tugas:", task.desc, (newDesc) => {
+                                if (newDesc !== null && newDesc.trim() !== "") {
+                                    editTaskDesc(task.id, newDesc);
+                                }
+                            });
                         });
                     }
 
@@ -1064,10 +1124,11 @@
                             const stId = btn.dataset.subtaskId;
                             const st = subtasks.find(s => s.id === stId);
                             if (st) {
-                                const newText = prompt("Edit sub-tugas:", st.text);
-                                if (newText !== null && newText.trim() !== "") {
-                                    editSubtaskDesc(task.id, stId, newText);
-                                }
+                                showCustomPrompt("Edit sub-tugas:", st.text, (newText) => {
+                                    if (newText !== null && newText.trim() !== "") {
+                                        editSubtaskDesc(task.id, stId, newText);
+                                    }
+                                });
                             }
                         });
                     });
